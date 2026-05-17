@@ -1,0 +1,208 @@
+{
+  "info": {
+    "_postman_id": "67265fbe-53cf-448c-bafe-0b7a5f13b76c",
+    "name": "[Projeto 2] API JSONPlaceholder",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48954998",
+    "_collection_link": "https://go.postman.co/collection/48954998-67265fbe-53cf-448c-bafe-0b7a5f13b76c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Listar Usuários",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// 1. Valida se a requisição teve sucesso (Status 200)\r",
+              "pm.test(\"Status code é 200 OK\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    });\r",
+              "\r",
+              "// 2. Valida a performance (Tempo de resposta menor que 600ms)\r",
+              "pm.test(\"Response time is less than 600ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+              "    });\r",
+              "\r",
+              "// 3. Valida o esquema básico (Se retornou uma lista de usuários e não um erro vazio)\r",
+              "pm.test(\"A resposta é uma lista (array) e não está vazia\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an('array');\r",
+              "    pm.expect(jsonData.length).to.be.above(0);\r",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Criar Usuário",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// 1. Valida se a criação foi um sucesso (Status 201 Created)\r",
+              "pm.test(\"Status code é 201 Created\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "// 2. Valida se o sistema gerou um ID de cadastro para o usuário\r",
+              "pm.test(\"Verifica se um ID de banco de dados foi gerado\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.exist;\r",
+              "});\r",
+              "\r",
+              "// 3. Valida se a API salvou o nome corretamente (Teste de integridade)\r",
+              "pm.test(\"O nome retornado é igual ao que foi enviado\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.name).to.eql(\"Rodrigo Pellegrini\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Rodrigo Pellegrini\",\r\n    \"username\": \"rodrigo.qa\",\r\n    \"email\": \"rodrigo@exemplo.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Atualizar Usuário",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code é 200 OK após atualização\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Verifica se o e-mail foi atualizado corretamente\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.email).to.eql(\"rodrigo.novoemail@exemplo.com\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Rodrigo Pellegrini\",\r\n    \"username\": \"rodrigo.qa.automation\",\r\n    \"email\": \"rodrigo.novoemail@exemplo.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Excluir Usuário",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code é 200 OK após exclusão\", function () {\r",
+              "    // Nota: O JSONPlaceholder retorna 200 para delete, \r",
+              "    // mas muitas APIs reais retornam 204 (No Content).\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Rodrigo Pellegrini\",\r\n    \"username\": \"rodrigo.qa.automation\",\r\n    \"email\": \"rodrigo.novoemail@exemplo.com\"\r\n}"
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
